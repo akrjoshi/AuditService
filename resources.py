@@ -1,7 +1,6 @@
 
 from flask import jsonify
 from flask_restful import reqparse, abort, Api, Resource
-import elasticsearch, enchant
 from database import db
 from bson.json_util import dumps
 import unicodedata
@@ -76,7 +75,7 @@ class Search(Resource):
 			to_date="."
 
 		limit = args['limit']
-		if limit == None and limit =='':
+		if limit == None or limit =='':
 			limitResult=0
 		else:
 			print limit
