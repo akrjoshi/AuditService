@@ -11,12 +11,14 @@ from bson.objectid import ObjectId
 
 parser = reqparse.RequestParser()
 parser.add_argument('jsondata', type=str)
+parser.add_argument('entity_name', type=str)
 
 
 
 class PostClass(Resource):
     def post(self):
-    	args = parser.parse_args()
+        args = parser.parse_args()
+
         jsonData = args['jsondata']
         jsonData = jsonData.replace("u\"","\"").replace("u\'","\'").replace("\'","\"")
 
@@ -42,13 +44,17 @@ class PostClass(Resource):
 
 
 class Search(Resource):
-	def get(self,entity_name):
+	def get(self):
+		args = parser.parse_args()
+		entity_name = args['entity_name']
 		auditResult = db.audits.find({'entity':entity_name})
 
-		return json.dumps(auditResult)
+		allResultList=[]
 
+		for oneResult in auditResult:
+			auditEntry={ "entity":oneResult.get("entity"), "entityid":oneResult.get("entityid"), "old_value":oneResult.get("old_value"), "ew_value":oneResult.get("new_value"), "change_owner":oneResult.get("change_owner"), "timestamp":oneResult.get("timestamp") }
+			allResultList.append(auditEntry)
 
-   #		if doctor:
-	#		return jsonify({'returnCode': "SUCCESS", 'data':doctor.serialize(), 'errorCode':None})
-#		else:
-		#	return 404
+		print allResultList
+
+		return json.dumps(allResultList)

@@ -21,7 +21,7 @@ from resources import PostClass, Search
 baseURL = '/api'
 
 api.add_resource(PostClass,baseURL + '/post')
-api.add_resource(Search, baseURL + '/get/<entity_name>')
+api.add_resource(Search, baseURL + '/get')
 
 
 
